@@ -3,44 +3,37 @@
 from decimal import Decimal, InvalidOperation
 
 
-def add(a, b):
-    return float(a + b)
-
-
-def sub(a, b):
-    return float(a - b)
-
-
-def mul(a, b):
-    return float(a * b)
-
-
-def div(a, b):
-    try:
-        return float(a / b)
-    except ZeroDivisionError:
-        return "Zero Division Error"
-
-
-def rev(a):
-    return div(1, a)
-
-
-def calc(a, op, b=0):
-    try:
-        a = Decimal(str(a))
-        b = Decimal(str(b))
-    except InvalidOperation:
+def main(a):
+    params = str(a).split("(")
+    args = check_args(params[1].split(","))
+    if args == "Value Error":
         return "Value Error"
-    if(op == "add"):
-        return add(a, b)
-    elif(op == "sub"):
-        return sub(a, b)
-    elif(op == "mul"):
-        return mul(a, b)
-    elif(op == "div"):
-        return div(a, b)
-    elif(op == "rev"):
-        return rev(a)
+    if params[0] == "sum":
+        return float(args[0] + args[1])
+    elif params[0] == "sub":
+        return float(args[0] - args[1])
+    elif params[0] == "mul":
+        return float(args[0] * args[1])
+    elif params[0] == "div":
+        try:
+            return float(args[0] / args[1])
+        except ZeroDivisionError:
+            return "Zero Division Error"
+    elif params[0] == "rev":
+        try:
+            return float(1 / args[0])
+        except ZeroDivisionError:
+            return "Zero Division Error"
     else:
         return "Operation error"
+
+
+def check_args(args):
+    i = 0
+    for arg in args:
+        try:
+            args[i] = Decimal(arg.split(")")[0])
+            i += 1
+        except InvalidOperation:
+            return "Value Error"
+    return args
